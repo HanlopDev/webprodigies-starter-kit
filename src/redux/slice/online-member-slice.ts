@@ -1,36 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-
 type InitialStateProps = {
-    members:{
+    members: {
         id: string
     }[]
 }
 
-const InitialState:  InitialStateProps = {
-    members: []
+const InitialState: InitialStateProps = {
+    members: [],
 }
 
 export const OnlineTracking = createSlice({
     name: "online",
     initialState: InitialState,
-    reducers:{
-        onOnline:(state, action: PayloadAction<InitialStateProps>) => {
-            const list = state.members.find((data: any) => 
-            action.payload.members.find(
-                (payload: any)=> data.id === payload.id
+    reducers: {
+        onOnline: (state, action: PayloadAction<InitialStateProps>) => {
+            const list = state.members.find((data: any) =>
+                action.payload.members.find(
+                    (payload: any) => data.id === payload.id,
+                ),
             )
-            )
-            if(!list)
-                state.members =  [...state.members, ...action.payload.members]
+            if (!list)
+                state.members = [...state.members, ...action.payload.members]
         },
-        onOffline:(state, action:PayloadAction<InitialStateProps>) =>  {
-            state.members = state.members.filter((member) => 
+        onOffline: (state, action: PayloadAction<InitialStateProps>) => {
+            state.members = state.members.filter((member) =>
                 action.payload.members.find((m) => member.id != m.id),
             )
-        }
-    }
+        },
+    },
 })
 
-export const {onOnline, onOffline} = OnlineTracking.actions
+export const { onOnline, onOffline } = OnlineTracking.actions
 export default OnlineTracking.reducer

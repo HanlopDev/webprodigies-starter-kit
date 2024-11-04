@@ -16,53 +16,49 @@ export const useNavigation = () => {
     }
 }
 
-export const useSideBar =  (groupid: string) => {
-    const {data: groups} = useQuery({
-        queryKey: ["user-groups"]
-    }) as {data: IGroups}
+export const useSideBar = (groupid: string) => {
+    const { data: groups } = useQuery({
+        queryKey: ["user-groups"],
+    }) as { data: IGroups }
 
-    const {data: groupInfo}  = useQuery({
-        queryKey: ["group-info"]
-    }) as {data: IGroupInfo}
+    const { data: groupInfo } = useQuery({
+        queryKey: ["group-info"],
+    }) as { data: IGroupInfo }
 
-    const {data: channel} = useQuery({
+    const { data: channels } = useQuery({
         queryKey: ["group-channel"],
-        queryFn: () => onGetGroupChannels(groupid)
+        queryFn: () => onGetGroupChannels(groupid),
     })
 
     const client = useQueryClient()
 
-
-    const {isPending, mutate, isError, variables} = useMutation({
+    const { isPending, mutate, isError, variables } = useMutation({
         mutationFn: (data: {
             id: string
             name: string
             icon: string
             createdAt: Date
-            groupId:  string |  null
-        }) => 
+            groupId: string | null
+        }) =>
             onCreatNewChannel(groupid, {
                 id: data.id,
                 name: data.name.toLowerCase(),
-                icon: data.icon
+                icon: data.icon,
             }),
-            onSettled: async () => {
-                return await  client.invalidateQueries({
-                    queryKey: ["group-channels"]
-                })
-            }
+        onSettled: async () => {
+            return await client.invalidateQueries({
+                queryKey: ["group-channels"],
+            })
+        },
     })
 
     if (isPending) {
-        toast("Success", {description: "Channel Created"})
+        toast("Success", { description: "Channel Created" })
     }
 
     if (isError) {
-        toast("Error", {description: "Oop! something went wrong"})
+        toast("Error", { description: "Oop! something went wrong" })
     }
 
-    return {groupInfo, groups, mutate, variables, isPending, channel}
-
+    return { groupInfo, groups, mutate, variables, isPending, channels }
 }
-
-

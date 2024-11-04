@@ -7,7 +7,11 @@ import {
     onGetUserGroup,
 } from "@/actions/group"
 import SideBar from "@/components/global/sidebar"
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query"
+import {
+    dehydrate,
+    HydrationBoundary,
+    QueryClient,
+} from "@tanstack/react-query"
 import { redirect } from "next/navigation"
 import React from "react"
 
@@ -45,16 +49,16 @@ const GroupLayout = async ({ children, params }: Props) => {
     })
     // members-chat
     await query.prefetchQuery({
-        queryKey: ["member-chat"],
-        queryFn: () => onGetAllGroupMenbers(params.groupid)
+        queryKey: ["member-chats"],
+        queryFn: () => onGetAllGroupMenbers(params.groupid),
     })
 
-    return 
+    return (
     <HydrationBoundary state={dehydrate(query)}>
         <div className="flex h-screen md:pt-5">
-            <SideBar groupid={params.groupid} userid={user.id}/>
+            <SideBar groupid={params.groupid} userid={user.id} />
         </div>
-    </HydrationBoundary>
+    </HydrationBoundary>)
 }
 
 export default GroupLayout

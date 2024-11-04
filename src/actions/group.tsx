@@ -213,51 +213,51 @@ export const onGetGroupChannels = async (groupid: string) => {
 export const onGetGroupSubscriptions = async (groupid: string) => {
     try {
         const subscriptions = await client.subscription.findMany({
-            where:{
-                groupId: groupid
+            where: {
+                groupId: groupid,
             },
-            orderBy:{
-                createdAt: "desc"
+            orderBy: {
+                createdAt: "desc",
             },
         })
-    
-        const  count = await client.members.count({
-            where:{
-                groupId: groupid
-            }
+
+        const count = await client.members.count({
+            where: {
+                groupId: groupid,
+            },
         })
-    
+
         if (subscriptions) {
             return {
                 status: 200,
                 subscriptions,
-                count
+                count,
             }
         }
     } catch (error) {
-        return {status: 400}
+        return { status: 400 }
     }
 }
 
 export const onGetAllGroupMenbers = async (groupid: string) => {
     try {
-        const users = await onAuthenticatedUser();
+        const users = await onAuthenticatedUser()
 
         const members = await client.members.findMany({
-            where:{
+            where: {
                 groupId: groupid,
-                NOT:{
-                    userId: users.id
-                }
+                NOT: {
+                    userId: users.id,
+                },
             },
-            include:{
-                User: true
-            }
+            include: {
+                User: true,
+            },
         })
-        if (members && members.length  > 0) {
-            return {status: 200, members}
+        if (members && members.length > 0) {
+            return { status: 200, members }
         }
     } catch (error) {
-        return  {status: 400,  message: "Oops! something went wrong"}
+        return { status: 400, message: "Oops! something went wrong" }
     }
 }
