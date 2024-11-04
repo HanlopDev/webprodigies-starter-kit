@@ -45,12 +45,10 @@ const CreateGroupLayout = ({ children }: Props) => {
             </div>
             <div>
                 <BackdropGradient
-                className="w-6/12, h-3/6 opacity-40"
-                container="lg:items-center"
+                    className="w-6/12, h-3/6 opacity-40"
+                    container="lg:items-center"
                 >
-                    <GlassCard
-                    className="xs:w-full lg:w-10/12 xl:w-8/12 mt-16  py-7"
-                    >
+                    <GlassCard className="xs:w-full lg:w-10/12 xl:w-8/12 mt-16  py-7">
                         {children}
                     </GlassCard>
                 </BackdropGradient>

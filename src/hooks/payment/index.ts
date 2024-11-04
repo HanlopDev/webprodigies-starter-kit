@@ -1,6 +1,9 @@
-'use client'
+"use client"
 import { onCreateNewGroup } from "@/actions/group"
-import { onGetStripeClientSecret, onTransferCommission } from "@/actions/payment"
+import {
+    onGetStripeClientSecret,
+    onTransferCommission,
+} from "@/actions/payment"
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js"
@@ -64,47 +67,50 @@ export const usePayments = (
                 return null
             }
 
-            const {error, paymentIntent} = await stripe.confirmCardPayment(
-                Intent.secret!,{
+            const { error, paymentIntent } = await stripe.confirmCardPayment(
+                Intent.secret!,
+                {
                     payment_method: {
-                        card:  elements.getElement(
+                        card: elements.getElement(
                             CardElement,
-                        )  as  StripeCardElement
-                    }
-                }
+                        ) as StripeCardElement,
+                    },
+                },
             )
             if (error) {
-                return toast("Error", {description: "Oops! something went wrong, try again later"})
+                return toast("Error", {
+                    description: "Oops! something went wrong, try again later",
+                })
             }
 
             if (paymentIntent?.status === "succeeded") {
                 if (affiliate) {
-                    await onTransferCommission(stripeId!)   
+                    await onTransferCommission(stripeId!)
                 }
 
                 const created = await onCreateNewGroup(userId, data)
                 if (created && created.status === 200) {
-                    toast("Success",  {description: created.message})
+                    toast("Success", { description: created.message })
                     router.push(
-                    `/group/${created.data?.group[0].id}/channel/
-                    ${created.data?.group[0].channel[0].id}`
+                        `/group/${created.data?.group[0].id}/channel/
+                    ${created.data?.group[0].channel[0].id}`,
                     )
                 }
                 if (created && created.status !== 200) {
                     reset()
-                    return toast("Error", {description: created.message})
+                    return toast("Error", { description: created.message })
                 }
             }
         },
     })
 
-    const onCreateGroup = handleSubmit( async (values)=> createGroup(values))
+    const onCreateGroup = handleSubmit(async (values) => createGroup(values))
     return {
         onCreateGroup,
         isPending,
         register,
         errors,
         isCategory,
-        creatingIntent
+        creatingIntent,
     }
 }
